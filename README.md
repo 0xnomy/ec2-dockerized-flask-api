@@ -1,4 +1,4 @@
-# Bookstore Web API with Docker and AWS
+# End-to-End Deployment of Web API using Docker, MySQL, and Terraform on AWS
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.x-green.svg)](https://flask.palletsprojects.com/)
