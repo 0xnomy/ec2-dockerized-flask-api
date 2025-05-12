@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore API Frontend</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #4cc9f0;
+            --success: #2ec4b6;
+            --danger: #e71d36;
+            --warning: #ff9f1c;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #e9ecef;
+            --gray-dark: #adb5bd;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .navbar {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            color: var(--dark);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        button.secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        button.secondary:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        button.delete {
+            background-color: var(--danger);
+        }
+        
+        button.delete:hover {
+            background-color: #d41c31;
+        }
+        
+        button.edit {
+            background-color: var(--secondary);
+        }
+        
+        button.edit:hover {
+            background-color: #3ab8de;
+        }
+        
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .book-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .book-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .book-item h3 {
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .book-item p {
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .sold {
+            background-color: #ffebee;
+            color: var(--danger);
+        }
+        
+        .available {
+            background-color: #e6f4ea;
+            color: var(--success);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .actions button {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        #message {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .success {
+            background-color: var(--success);
+        }
+        
+        .error {
+            background-color: var(--danger);
+        }
+        
+        .footer {
+            background-color: white;
+            border-top: 1px solid var(--gray);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tech-badge {
+            background-color: var(--gray);
+            color: #555;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .tech-badge.aws {
+            background-color: #FF9900;
+            color: white;
+        }
+        
+        .tech-badge.docker {
+            background-color: #0db7ed;
+            color: white;
+        }
+        
+        .tech-badge.flask {
+            background-color: #000000;
+            color: white;
+        }
+        
+        .tech-badge.terraform {
+            background-color: #623CE4;
+            color: white;
+        }
+        
+        .tech-badge.mysql {
+            background-color: #4479A1;
+            color: white;
+        }
+        
+        .dev-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-container {
+                padding: 1rem;
+            }
+        }
+        
+        .logo {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .refresh-btn {
+            background-color: var(--gray);
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .refresh-btn:hover {
+            background-color: var(--gray-dark);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1><span class="logo">BOOKSTORE</span> API Frontend</h1>
+    </div>
+    
+    <div id="message"></div>
+    
+    <div class="main-container">
+        <div class="grid">
+            <div class="card">
+                <h2 class="card-title">Add New Book</h2>
+                <form id="addBookForm">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" placeholder="Enter book title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <input type="text" id="author" name="author" placeholder="Enter author name">
+                    </div>
+                    <button type="submit">Add Book</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">Edit Book</h2>
+                <form id="editBookForm" style="display: none;">
+                    <input type="hidden" id="editBookId">
+                    <div class="form-group">
+                        <label for="editTitle">Title</label>
+                        <input type="text" id="editTitle" name="editTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAuthor">Author</label>
+                        <input type="text" id="editAuthor" name="editAuthor">
+                    </div>
+                    <div class="form-group">
+                        <label for="editIsSold">Status</label>
+                        <select id="editIsSold" name="editIsSold">
+                            <option value="0">Available</option>
+                            <option value="1">Sold</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button type="button" class="secondary" onclick="cancelEdit()">Cancel</button>
+                        <button type="submit">Update Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 2rem;">
+            <h2 class="card-title">Book Collection</h2>
+            <button onclick="getAllBooks()" class="refresh-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 5px; vertical-align: text-top;">
+                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                </svg>
+                Refresh Books
+            </button>
+            <div id="bookList" class="book-list">
+                <!-- Books will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div>
+                <h3>Tech Stack</h3>
+                <div class="tech-stack">
+                    <span class="tech-badge flask">Python Flask</span>
+                    <span class="tech-badge mysql">MySQL</span>
+                    <span class="tech-badge docker">Docker</span>
+                    <span class="tech-badge terraform">Terraform</span>
+                    <span class="tech-badge aws">AWS EC2</span>
+                    <span class="tech-badge aws">AWS Security Groups</span>
+                    <span class="tech-badge aws">AWS CloudFormation</span>
+                    <span class="tech-badge">RESTful API</span>
+                    <span class="tech-badge">Git & GitHub</span>
+                </div>
+            </div>
+            
+            <div>
+                <p class="dev-title">DEVELOPERS</p>
+                <p>Hassan Rais • Muhammad Adeel • Hamza Zaidi • Nauman Ali Murad</p>
+                <small>For CE308 Cloud Computing Course • Instructor: Miss Safia Baloch</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API BASE URL - Change this to your actual API endpoint
+        const API_BASE_URL = '/';
+        
+        // Show message function
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = isError ? 'error' : 'success';
+            messageDiv.style.display = 'block';
+            
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Get all books
+        async function getAllBooks() {
+            try {
+                const response = await fetch(`${API_BASE_URL}books`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayBooks(data.books);
+            } catch (error) {
+                showMessage(`Error fetching books: ${error.message}`, true);
+            }
+        }
+        
+        // Display books in the UI
+        function displayBooks(books) {
+            const bookListDiv = document.getElementById('bookList');
+            bookListDiv.innerHTML = '';
+            
+            if (books.length === 0) {
+                bookListDiv.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">No books found in the collection. Add a new book to get started!</p>';
+                return;
+            }
+            
+            books.forEach(book => {
+                const bookDiv = document.createElement('div');
+                bookDiv.className = 'book-item';
+                bookDiv.innerHTML = `
+                    <span class="status ${book.is_sold ? 'sold' : 'available'}">${book.is_sold ? 'Sold' : 'Available'}</span>
+                    <h3>${book.title}</h3>
+                    <p><strong>Author:</strong> ${book.author || 'Unknown'}</p>
+                    <p><strong>ID:</strong> ${book.book_id}</p>
+                    <div class="actions">
+                        <button class="edit" onclick="editBook(${book.book_id})">Edit</button>
+                        <button class="delete" onclick="deleteBook(${book.book_id})">Delete</button>
+                    </div>
+                `;
+                bookListDiv.appendChild(bookDiv);
+            });
+        }
+        
+        // Add a new book
+        document.getElementById('addBookForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}books`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, author })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                showMessage(`Book "${data['newly added book'].title}" added successfully!`);
+                document.getElementById('title').value = '';
+                document.getElementById('author').value = '';
+                getAllBooks();
+            } catch (error) {
+                showMessage(`Error adding book: ${error.message}`, true);
+            }
+        });
+        
+        // Get book by ID for editing
+        async function editBook(bookId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}books/${bookId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const book = data['book found'];
+                
+                // Fill the edit form
+                document.getElementById('editBookId').value = book.book_id;
+                document.getElementById('editTitle').value = book.title;
+                document.getElementById('editAuthor').value = book.author || '';
+                document.getElementById('editIsSold').value = book.is_sold ? '1' : '0';
+                
+                // Show edit form
+                document.getElementById('editBookForm').style.display = 'block';
+                
+                // Scroll to the edit form
+                document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showMessage(`Error fetching book: ${error.message}`, true);
+            }
+        }
+        
+        // Update book
+        document.getElementById('editBookForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const bookId = document.getElementById('editBookId').value;
+            const title = document.getElementById('editTitle').value;
+            const author = document.getElementById('editAuthor').value;
+            const isSold = document.getElementById('editIsSold').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}books/${bookId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        title, 
+                        author,
+                        is_sold: parseInt(isSold)
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                showMessage(`Book "${data['updated book'].title}" updated successfully!`);
+                cancelEdit();
+                getAllBooks();
+            } catch (error) {
+                showMessage(`Error updating book: ${error.message}`, true);
+            }
+        });
+        
+        // Cancel edit
+        function cancelEdit() {
+            document.getElementById('editBookForm').style.display = 'none';
+        }
+        
+        // Delete book
+        async function deleteBook(bookId) {
+            if (!confirm('Are you sure you want to delete this book?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}books/${bookId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.result) {
+                    showMessage('Book deleted successfully!');
+                    getAllBooks();
+                } else {
+                    showMessage('Failed to delete book.', true);
+                }
+            } catch (error) {
+                showMessage(`Error deleting book: ${error.message}`, true);
+            }
+        }
+        
+        // Load books when page loads
+        window.onload = getAllBooks;
+    </script>
+</body>
+</html> 
