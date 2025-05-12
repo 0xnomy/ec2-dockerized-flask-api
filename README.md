@@ -114,27 +114,6 @@ Below is the architecture diagram of the project:
 - Security Group: Open port 80 for HTTP
 - Tags: "Web Server of Bookstore"
 
-## 🧪 Testing
-
-Test the API endpoints using curl:
-
-```bash
-# List all books
-curl http://localhost/books
-
-# Get specific book
-curl http://localhost/books/1
-
-# Create new book
-curl -X POST http://localhost/books -H "Content-Type: application/json" -d '{"title":"New Book","author":"Author Name"}'
-
-# Update book
-curl -X PUT http://localhost/books/1 -H "Content-Type: application/json" -d '{"title":"Updated Book"}'
-
-# Delete book
-curl -X DELETE http://localhost/books/1
-```
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
