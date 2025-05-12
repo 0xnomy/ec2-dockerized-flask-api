@@ -17,6 +17,10 @@ A modern bookstore web service built with Python Flask, containerized using Dock
 - Automated infrastructure provisioning
 - Scalable and maintainable architecture
 
+## 🎥 Demo
+
+Check out the [project demonstration video](./project_run.mp4) to see how the application works in action.
+
 ## 🏗️ Architecture
 
 Below is the architecture diagram of the project:
@@ -43,6 +47,7 @@ Below is the architecture diagram of the project:
 ├── bootstrap.sh        # EC2 instance bootstrap script
 ├── bookstore-frontend.html # Frontend HTML/JS interface
 ├── project_arch.png    # Architecture diagram
+├── project_run.mp4     # Demo video of the project
 └── README.md           # Project documentation
 ```
 
